@@ -17,9 +17,6 @@ from telegraph import Telegraph
 faulthandler.enable()
 import subprocess
 
-from megasdkrestclient import MegaSdkRestClient
-from megasdkrestclient import errors as mega_err
-
 socket.setdefaulttimeout(600)
 
 botStartTime = time.time()
@@ -68,19 +65,13 @@ BOT_TOKEN = None
 
 download_dict_lock = threading.Lock()
 status_reply_dict_lock = threading.Lock()
-# Key: update.effective_chat.id
-# Value: telegram.Message
 status_reply_dict = {}
-# Key: update.message.message_id
-# Value: An object of Status
 download_dict = {}
-# Stores list of users and chats the bot is authorized to use in
 AUTHORIZED_CHATS = set()
 if os.path.exists("authorized_chats.txt"):
     with open("authorized_chats.txt", "r+") as f:
         lines = f.readlines()
         for line in lines:
-            #    LOGGER.info(line.split())
             AUTHORIZED_CHATS.add(int(line.split()[0]))
 try:
     achats = getConfig("AUTHORIZED_CHATS")
@@ -117,42 +108,6 @@ telegraph = Telegraph()
 telegraph.create_account(short_name=sname)
 telegraph_token = telegraph.get_access_token()
 LOGGER.info("Telegraph Token Generated: '" + telegraph_token + "'")
-
-try:
-    MEGA_KEY = getConfig("MEGA_KEY")
-
-except KeyError:
-    MEGA_KEY = None
-    LOGGER.info("MEGA API KEY NOT AVAILABLE")
-if MEGA_KEY is not None:
-    # Start megasdkrest binary
-    subprocess.Popen(["megasdkrest", "--apikey", MEGA_KEY])
-    time.sleep(3)  # Wait for the mega server to start listening
-    mega_client = MegaSdkRestClient("http://localhost:6090")
-    try:
-        MEGA_USERNAME = getConfig("MEGA_USERNAME")
-        MEGA_PASSWORD = getConfig("MEGA_PASSWORD")
-        if len(MEGA_USERNAME) > 0 and len(MEGA_PASSWORD) > 0:
-            try:
-                mega_client.login(MEGA_USERNAME, MEGA_PASSWORD)
-            except mega_err.MegaSdkRestClientException as e:
-                logging.error(e.message["message"])
-                exit(0)
-        else:
-            LOGGER.info(
-                "Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!"
-            )
-            MEGA_USERNAME = None
-            MEGA_PASSWORD = None
-    except KeyError:
-        LOGGER.info(
-            "Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!"
-        )
-        MEGA_USERNAME = None
-        MEGA_PASSWORD = None
-else:
-    MEGA_USERNAME = None
-    MEGA_PASSWORD = None
 try:
     INDEX_URL = getConfig("INDEX_URL")
     if len(INDEX_URL) == 0:
@@ -207,7 +162,7 @@ try:
     BLOCK_MEGA_LINKS = getConfig("BLOCK_MEGA_LINKS")
     BLOCK_MEGA_LINKS = BLOCK_MEGA_LINKS.lower() == "true"
 except KeyError:
-    BLOCK_MEGA_LINKS = False
+    BLOCK_MEGA_LINKS = True
 
 try:
     SHORTENER = getConfig("SHORTENER")
