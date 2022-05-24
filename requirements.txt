@@ -1,5 +1,5 @@
 appdirs
-aria2p
+aria2p>=0.3.0,<0.10.0
 beautifulsoup4
 google-api-python-client
 google-auth-httplib2
@@ -10,7 +10,7 @@ lxml
 megasdkrestclient
 psutil
 pybase64
-Pyrogram
+https://github.com/pyrogram/pyrogram/archive/29701a3a55b00b127c0588791c8dbc4d092bc8a6.zip
 python-dotenv
 python-magic
 python-telegram-bot
@@ -18,4 +18,3 @@ requests
 telegraph
 tenacity
 TgCrypto
-youtube_dl
