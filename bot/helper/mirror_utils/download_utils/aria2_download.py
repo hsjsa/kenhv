@@ -64,7 +64,7 @@ class AriaDownloadHelper(DownloadHelper):
     def __onDownloadError(self, api, gid):
         sleep(
             0.5
-        )  # sleep for split second to ensure proper dl gid update from onDownloadComplete
+        )
         LOGGER.info(f"onDownloadError: {gid}")
         dl = getDownloadByGid(gid)
         download = api.get_download(gid)
@@ -88,7 +88,7 @@ class AriaDownloadHelper(DownloadHelper):
             download = aria2.add_magnet(link, {"dir": path, "out": filename})
         else:
             download = aria2.add_uris([link], {"dir": path, "out": filename})
-        if download.error_message:  # no need to proceed further at this point
+        if download.error_message:  
             listener.onDownloadError(download.error_message)
             return
         with download_dict_lock:
