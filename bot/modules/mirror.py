@@ -23,7 +23,6 @@ from bot import (
     DOWNLOAD_STATUS_UPDATE_INTERVAL,
     INDEX_URL,
     LOGGER,
-    MEGA_KEY,
     SHORTENER,
     SHORTENER_API,
     Interval,
@@ -40,10 +39,6 @@ from bot.helper.ext_utils.exceptions import (
 from bot.helper.mirror_utils.download_utils.aria2_download import AriaDownloadHelper
 from bot.helper.mirror_utils.download_utils.direct_link_generator import (
     direct_link_generator,
-)
-from bot.helper.mirror_utils.download_utils.mega_download import MegaDownloader
-from bot.helper.mirror_utils.download_utils.telegram_downloader import (
-    TelegramDownloadHelper,
 )
 from bot.helper.mirror_utils.status_utils import listeners
 from bot.helper.mirror_utils.status_utils.extract_status import ExtractStatus
@@ -81,7 +76,6 @@ class MirrorListener(listeners.MirrorListeners):
         pass
 
     def onDownloadProgress(self):
-        # We are handling this on our own!
         pass
 
     def clean(self):
@@ -98,7 +92,7 @@ class MirrorListener(listeners.MirrorListeners):
             download = download_dict[self.uid]
             name = download.name()
             size = download.size_raw()
-            if name is None:  # when pyrogram's media.file_name is of NoneType
+            if name is None:  
                 name = os.listdir(f"{DOWNLOAD_DIR}{self.uid}")[0]
             m_path = f"{DOWNLOAD_DIR}{self.uid}/{name}"
         if self.isZip:
@@ -185,7 +179,7 @@ class MirrorListener(listeners.MirrorListeners):
 
     def onUploadComplete(self, link: str, size):
         with download_dict_lock:
-            msg = f"<b>Filename : </b><code>{download_dict[self.uid].name()}</code>\n<b>Size : </b><code>{size}</code>"
+            msg = f"<b>Filename : </b>{download_dict[self.uid].name()}\n<b>Size : </b>{size}"
             buttons = button_build.ButtonMaker()
             if SHORTENER is not None and SHORTENER_API is not None:
                 surl = requests.get(
