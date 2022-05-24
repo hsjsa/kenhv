@@ -19,7 +19,7 @@ from bot.helper.telegram_helper.message_utils import (
     sendLogFile,
     sendMessage,
 )
-from bot.modules import (  # noqa
+from bot.modules import (
     authorize,
     cancel_mirror,
     clone,
@@ -27,7 +27,6 @@ from bot.modules import (  # noqa
     list,
     mirror,
     mirror_status,
-    watch,
 )
 
 
@@ -58,15 +57,13 @@ def stats(update, context):
 
 def start(update, context):
     start_string = f"""
-This is a bot which can mirror all your links to Google drive!
-Type /{BotCommands.HelpCommand} to get a list of available commands
+Type /{BotCommands.HelpCommand}
 """
     sendMessage(start_string, context.bot, update)
 
 
 def restart(update, context):
     restart_message = sendMessage("Restarting, Please wait!", context.bot, update)
-    # Save restart message ID and chat ID in order to edit it after restarting
     with open(".restartmsg", "w") as f:
         f.truncate(0)
         f.write(f"{restart_message.chat.id}\n{restart_message.message_id}\n")
@@ -98,12 +95,6 @@ Plzzz see this for full use of this command https://telegra.ph/Magneto-Python-Ar
 
 /{BotCommands.ZipMirrorCommand} [download_url][magnet_link]: start mirroring and upload the archived (.tar) version of the download
 
-/{BotCommands.WatchCommand} [youtube-dl supported link]: Mirror through youtube-dl. Click /{BotCommands.WatchCommand} for more help.
-
-/{BotCommands.TarWatchCommand} [youtube-dl supported link]: Mirror through youtube-dl and tar before uploading
-
-/{BotCommands.ZipWatchCommand} [youtube-dl supported link]: Mirror through youtube-dl and tar before uploading
-
 /{BotCommands.CancelMirror} : Reply to the message by which the download was initiated and that download will be cancelled
 
 /{BotCommands.StatusCommand}: Shows a status of all the downloads
@@ -128,9 +119,6 @@ botcmds = [
     (f"{BotCommands.UnzipMirrorCommand}", "Extract files"),
     (f"{BotCommands.CloneCommand}", "Copy file/folder from GDrive"),
     (f"{BotCommands.deleteCommand}", "Delete file from GDrive [owner only]"),
-    (f"{BotCommands.WatchCommand}", "Mirror Youtube-dl support link"),
-    (f"{BotCommands.TarWatchCommand}", "Mirror Youtube playlist link as .tar"),
-    (f"{BotCommands.ZipWatchCommand}", "Mirror Youtube playlist link as .zip"),
     (f"{BotCommands.CancelMirror}", "Cancel a task"),
     (f"{BotCommands.CancelAllCommand}", "Cancel all tasks [owner only]"),
     (f"{BotCommands.StatusCommand}", "Get mirror status"),
